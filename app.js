@@ -4,9 +4,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const {database} = require('./config')
-
+let flash = require('connect-flash');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const passport = require('passport')
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 var app = express();
 
@@ -24,11 +27,24 @@ app.use('/', indexRouter);
 app.use('/', usersRouter);
 
 database()
+app.use(flash());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+app.use(session({
+  secret: 'anon-app-2021',
+  saveUninitialized: false,
+  resave: false,
+  store: MongoStore.create({
+    mongoUrl: 'mongodb://localhost:27017/ranode',
+  })
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // error handler
 app.use(function(err, req, res, next) {

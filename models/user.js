@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const bcryptjs = require('bcryptjs')
 
-var userData= new mongoose.Schema({
+const userData= new mongoose.Schema({
 	FirstName: {
 		type: String,
 	},
@@ -14,12 +14,15 @@ var userData= new mongoose.Schema({
     Email: {
 		type: String,
 	},
+	Country:{
+        type:String,
+    },
+	Password: {
+		type: String,
+	},
     GovernmentIDImage: {
 		type: String,
 	},
-    Country:{
-        String
-    }
 })
 module.exports = mongoose.model('User', userData)
 

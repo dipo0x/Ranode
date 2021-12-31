@@ -52,13 +52,19 @@
             <div class="form-group">
                 <select name="Country" id="Country" type="Selection" required>
                     <option value="" disabled selected>Select Country</option>
-                    <option value="1">Nigeria</option>
-                    <option value="2">USA</option> 
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="USA">USA</option> 
                 </select>
             </div>
             <div class="form-group">
                 <input type="text" name= "Email" class="form-control" placeholder="Email" >
             </div>
+            {{#if errors.email_exists }}
+                <div class="alert alert-danger">{{ errors.email_exists }}</div>
+            {{/if}}
+            {{#if errors.email }}
+                <div class="alert alert-danger">{{ errors.email }}</div>
+            {{/if}}
             <div class="form-group">
                 <input type="password" name= "password" class="form-control" placeholder="Password">
             </div>

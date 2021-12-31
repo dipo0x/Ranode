@@ -41,24 +41,34 @@ exports.register = function(req, res, next) {
 }
 
 exports.post_register = async function(req, res, next) {
-    const user = new userData()
-    user.FirstName = req.body.FirstName
-    user.Surname = req.body.Surname
-    user.Number = req.body.Number
-    user.Country = req.body.Country
-    user.theEmail = req.body.Email
-    user.thePassword = await bcryptjs.hash(req.body.password, 10)
-    ///////
+    const FirstName = req.body.FirstName
+    const Surname = req.body.Surname
+    const Number = req.body.Number
+    const Country = req.body.Country
     const theEmail = req.body.Email
     const thePassword = req.body.password
+    const newPassword = await bcryptjs.hash(req.body.password, 10)
+    ///////
     const { errors, valid } = signup(theEmail, thePassword);
-    userData.findOne({email: theEmail}).then(user=>{
-        if(user !== null || !valid){
+    userData.findOne({Email: theEmail}).then(user=>{
+        if(user !== null){
             errors["email_exists"] = "Email already in use"
             rerender_register(req, res, errors);
         }
         else{
-            user.save().then(result=>{
+            if(!valid){
+                rerender_register(req, res, errors);
+        }
+        else{
+            const newUser = new userData({
+                FirstName: FirstName,
+                Surname: Surname,
+                Number: Number,
+                Country: Country,
+                Email: theEmail,
+                Password: newPassword,
+            })
+            newUser.save().then(result=>{
                 passport.authenticate('local',{
                     successRedirect: '/profile',
                     failureRedirect: '/login',
@@ -66,5 +76,22 @@ exports.post_register = async function(req, res, next) {
                 })(req, res, next);
             })
         }
-    })
+    }
+})
+}
+
+exports.login = function(req, res, next) {
+    res.render('users/login');
+}
+
+exports.post_login = function(req, res, next) {
+    passport.authenticate('local',{
+        successRedirect: '/profile',
+        failureRedirect: '/login',
+        failureFlash: true
+    })(req, res, next);
+}
+
+const rerender_register = function(req, res, errors) {
+    res.render('users/register', {errors});
 }
