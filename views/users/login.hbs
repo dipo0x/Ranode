@@ -41,9 +41,16 @@
         <div class="form-group">
             <input type="Email" name= "Email" class="form-control" placeholder="Email" required="required">
         </div>
+        {{#if errors.email }}
+                <div class="alert alert-danger">{{ errors.email }}</div>
+        {{/if}}
         <div class="form-group">
-            <input type="password" name= "password" class="form-control" placeholder="Password" required="required">
+            <input type="Password" name= "Password" class="form-control" placeholder="Password" required="required">
         </div>
+        {{#if errors.password }}
+            <div class="alert alert-danger">{{ errors.password }}</div>
+        {{/if}}
+
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block">Log in</button>
         </div>        

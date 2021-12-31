@@ -3,9 +3,10 @@ var router = express.Router();
 const views = require('../controllers/users')
 
 /* GET users listing. */
-router.get('/register', views.register);
-router.post('/register', views.post_register);
-router.get('/login', views.login);
-router.post('/login', views.post_login);
+router.get('/register', views.get_register);
+router.post('/register', views.register);
+router.get('/login', views.get_login);
+router.post('/login', views.login);
+router.get('/profile', views.profile);
 
 module.exports = router;

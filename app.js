@@ -21,30 +21,29 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname + '/public'));
+
+database()
+
+app.use(flash());
+
+// Advanced usage
+app.use(session({
+  secret: 'ranode-app-2021',
+  saveUninitialized: true,
+  resave: true,
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/', usersRouter);
-
-database()
-app.use(flash());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
-app.use(session({
-  secret: 'anon-app-2021',
-  saveUninitialized: false,
-  resave: false,
-  store: MongoStore.create({
-    mongoUrl: 'mongodb://localhost:27017/ranode',
-  })
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 // error handler
 app.use(function(err, req, res, next) {
