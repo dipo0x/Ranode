@@ -1,10 +1,16 @@
 const Flutterwave = require('flutterwave-node-v3');
 const addFunds = require('../models/add_funds')
-// const userData = require('../models/user')
+const redis = require('redis')
+
+/////////REDIS
+const client = redis.createClient()
+client.connect()
+/////////REDIS END
 
 const flw = new Flutterwave("FLWPUBK_TEST-19449bb3c010c4c190355bb332db3106-X", "FLWSECK_TEST-65325b32187fa4b288001b4fad732313-X");
 let tx_ref = Math.floor(Math.random() * 1000000000000);
 
+/////////////////EVEYTHING DEPOSIT/////////////////
 exports.chargeCard = async (req, res, next) => {
     const payload = {
         "card_number": req.body.card_number,
@@ -13,7 +19,7 @@ exports.chargeCard = async (req, res, next) => {
         "expiry_year": req.body.expiry_year,
         "currency": "NGN",
         "amount": req.body.amount,
-        "redirect_url": "http://9d62-197-210-84-181.ngrok.io/success",
+        "redirect_url": "https://fuzzy-bobcat-31.loca.lt/success",
         "fullname": req.user.FirstName + " " + req.user.Surname,
         "email": req.user.Email,
         "phone_number": req.user.Number,
@@ -65,6 +71,7 @@ const add_funds = function(req, res, errors) {
 
 module.exports.post_success = function(req, res, next) {
     addFunds.findOneAndDelete({email:"a@gmail.com"}).then(()=>{
+        client.del(req.body.data.customer.email)
         const email = req.body.data.customer.email
         const amount =  req.body.data.amount
         const time = req.body.data.created_at
@@ -78,11 +85,50 @@ module.exports.post_success = function(req, res, next) {
             processor_response: processor_response
         })
         addFundsData.save()
-        })
-  }
 
-module.exports.success = function(req, res) {
-    addFunds.findOne({email:"a@gmail.com"}).then(result=>{
-        res.render('wallet/deposit_successful', {data:result});
+    client.hSet(email, [
+        'amount', amount,
+        'time', time,
+        'tx_ref', tx_ref,
+        'processor_response', processor_response,
+        ])
     })
   }
+
+module.exports.success = function(req, res, next) {
+    client.HGETALL("a@gmail.com").then(obj =>{
+        if(obj){
+            res.render('wallet/deposit_successful', {data:obj});
+        }
+        else{
+            addFunds.findOne({email:"a@gmail.com"}).then(result=>{
+                res.render('wallet/deposit_successful', {data:result});
+            })
+        }})}
+
+/////////////////EVEYTHING TRANSFER/////////////////
+module.exports.transfer = function(req, res, next) {
+    res.render('wallet/transfer');
+  }
+
+  module.exports.initTrans = async (req, res, next) => {
+    try {
+        const payload = {
+            "account_bank": "044", //This is the recipient bank code. Get list here :https://developer.flutterwave.com/v3.0/reference#get-all-banks
+            "account_number": req.body.account_number,
+            "amount": req.body.amount,
+            "narration": "Ranode transfer to you from" + req.user.FirstName + " " + req.user.Surname,
+            "currency": "NGN",
+            "reference": "transfer-"+Date.now(), //This is a merchant's unique reference for the transfer, it can be used to query for the status of the transfer
+            "callback_url": "https://localhost:3000/profile",
+            "debit_currency": "NGN"
+        }
+        const response = await flw.
+
+    Transfer.initiate(payload)
+            console.log(response);
+        } catch (error) {
+            console.log(error)
+        }
+
+}
