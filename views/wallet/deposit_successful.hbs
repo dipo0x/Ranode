@@ -44,7 +44,22 @@
         <h1>Success</h1> 
         <p>You have successfully deposited into your account<br/> It's time to wire your Gees aza</p>
         </br>
-        <h3></h3>
+        <h2>Here is your deposit information</h2>
+        <div class="container">
+          <p>
+            Amount deposited : N{{data.amount}}
+          </p>
+          <p>
+            Time of deposit : {{data.time}}
+          </p>
+          <p>
+            Transaction Reference : {{data.tx_ref}}
+          </p>
+          <p>
+            Status: {{data.processor_response}}
+          </p>
+          <p> This is kept here temporarily as proof of deposit</p>
+        </div>
       </div>
     </body>
 </html>

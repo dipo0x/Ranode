@@ -1,4 +1,5 @@
 const Flutterwave = require('flutterwave-node-v3');
+const addFunds = require('../models/add_funds')
 // const userData = require('../models/user')
 
 const flw = new Flutterwave("FLWPUBK_TEST-19449bb3c010c4c190355bb332db3106-X", "FLWSECK_TEST-65325b32187fa4b288001b4fad732313-X");
@@ -12,7 +13,7 @@ exports.chargeCard = async (req, res, next) => {
         "expiry_year": req.body.expiry_year,
         "currency": "NGN",
         "amount": req.body.amount,
-        "redirect_url": "http://656b-197-210-78-210.ngrok.io/success",
+        "redirect_url": "http://9d62-197-210-84-181.ngrok.io/success",
         "fullname": req.user.FirstName + " " + req.user.Surname,
         "email": req.user.Email,
         "phone_number": req.user.Number,
@@ -62,6 +63,26 @@ const add_funds = function(req, res, errors) {
     res.render('wallet/add-funds', {errors:errors});
   }
 
-module.exports.success = function(req, res, next) {
-    res.render('wallet/deposit_successful', {data:req.body});
+module.exports.post_success = function(req, res, next) {
+    addFunds.findOneAndDelete({email:"a@gmail.com"}).then(()=>{
+        const email = req.body.data.customer.email
+        const amount =  req.body.data.amount
+        const time = req.body.data.created_at
+        const tx_ref = req.body.data.tx_ref
+        const processor_response = req.body.data.processor_response
+        const addFundsData = new addFunds({
+            email: email,
+            amount: amount,
+            time: time,
+            tx_ref: tx_ref,
+            processor_response: processor_response
+        })
+        addFundsData.save()
+        })
+  }
+
+module.exports.success = function(req, res) {
+    addFunds.findOne({email:"a@gmail.com"}).then(result=>{
+        res.render('wallet/deposit_successful', {data:result});
+    })
   }
