@@ -36,46 +36,30 @@
 </head>
 <body>
     <div class="login-form">
-        <form action="/register" method="post">
-            <h2 class="text-center">Sign Up</h2>       
-            <h5 class="text-center">It's time for people to send you anonymous message</h5>       
+        <form action="/add-funds" method="post">
+            <h2 class="text-center">Deposit Money</h2>       
+            <h5 class="text-center">Deposit money to start sending money to others</h5>       
             <div class="form-group">
-                <input type="text" name= "FirstName" class="form-control" placeholder="First Name" >
+                <input type="text" name= "card_number" class="form-control" placeholder="Card Number" >
             </div>
             <div class="form-group">
-                <input type="text" name= "Surname" class="form-control" placeholder="Surname" >
+                <input type="text" name= "cvv" class="form-control" placeholder="Cvv" >
+            </div>
+              <div class="form-row">
+                <div class="col-5">
+                    <input type="text" name = "expiry_month" class="form-control" placeholder="Expiry month">
+                </div>
+                <div class="col-5">
+                    <input type="text" name="expiry_year" class="form-control" placeholder="Expiry Year">
+                </div>
             </div>
             <div class="form-group">
-                <input type="text" name= "Number" class="form-control" placeholder="Number" >
-            </div>
-
-            <div class="form-group">
-                <select name="Country" id="Country" type="Selection" required>
-                    <option value="" disabled selected>Select Country</option>
-                    <option value="Nigeria">Nigeria</option>
-                    <option value="USA">USA</option> 
-                </select>
+                <input type="text" name= "amount" class="form-control" placeholder="Amount" >
             </div>
             <div class="form-group">
-                <input type="text" name= "Email" class="form-control" placeholder="Email" >
-            </div>
-            {{#if errors.email_exists }}
-                <div class="alert alert-danger">{{ errors.email_exists }}</div>
-            {{/if}}
-            {{#if errors.email }}
-                <div class="alert alert-danger">{{ errors.email }}</div>
-            {{/if}}
-            <div class="form-group">
-                <input type="password" name= "Password" class="form-control" placeholder="Password">
-            </div>
-            {{#if errors.password }}
-            <div class="alert alert-danger">{{ errors.password }}</div> 
-            {{/if}}
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                <button type="submit" class="btn btn-primary btn-block">Deposit</button>
             </div>        
         </form>
-        <p class="text-center"><a href="/login">Log in</a></p>
     </div>
 </body>
 </html>
