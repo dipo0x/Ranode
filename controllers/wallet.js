@@ -12,7 +12,7 @@ exports.chargeCard = async (req, res, next) => {
         "expiry_year": req.body.expiry_year,
         "currency": "NGN",
         "amount": req.body.amount,
-        "redirect_url": "https://localhost:3000/success",
+        "redirect_url": "http://656b-197-210-78-210.ngrok.io/success",
         "fullname": req.user.FirstName + " " + req.user.Surname,
         "email": req.user.Email,
         "phone_number": req.user.Number,
@@ -23,7 +23,6 @@ exports.chargeCard = async (req, res, next) => {
     try {
         const response = await flw.Charge.card(payload)
         if (response.status == 'error'){
-            console.log(response)
             const errors = {};
             errors["error"] = response.message
             add_funds(req, res, errors);
@@ -47,7 +46,9 @@ exports.chargeCard = async (req, res, next) => {
             var url = response.meta.authorization.redirect
             res.redirect(url)
         }
-        console.log(response)
+        const Balance = req.user.balance + response.data["amount"]
+        req.user.balance = Balance
+        req.user.save()
     } catch (error) {
         console.log(error)
     }
@@ -58,9 +59,9 @@ module.exports.add_funds = function(req, res, next) {
   }
 
 const add_funds = function(req, res, errors) {
-    res.render('wallet/add-funds');
+    res.render('wallet/add-funds', {errors:errors});
   }
 
 module.exports.success = function(req, res, next) {
-    res.render('wallet/deposit_successful');
+    res.render('wallet/deposit_successful', {data:req.body});
   }
