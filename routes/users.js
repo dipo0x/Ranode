@@ -8,5 +8,6 @@ router.post('/register', views.register);
 router.get('/login', views.get_login);
 router.post('/login', views.login);
 router.get('/profile', views.profile);
+router.get('/logout', views.logout);
 
 module.exports = router;

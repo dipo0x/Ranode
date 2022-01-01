@@ -23,6 +23,9 @@ const userData= new mongoose.Schema({
     GovernmentIDImage: {
 		type: String,
 	},
+	balance:{
+		type: Number, default: 0
+	}
 })
 module.exports = mongoose.model('User', userData)
 

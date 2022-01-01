@@ -7,6 +7,7 @@ const {database} = require('./config')
 let flash = require('connect-flash');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var walletRouter = require('./routes/wallet');
 const passport = require('passport')
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
@@ -39,7 +40,7 @@ app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/', usersRouter);
-
+app.use('/', walletRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

@@ -105,11 +105,16 @@ const rerender_login = function(req, res, errors) {
 
 exports.profile = function(req, res) {
     if(req.user){
-    console.log(req.user)
     userData.findOne({username : req.user.username}).then(user=>{
         res.render('users/profile', {user: user});
     })}
     else{
         res.redirect('/login')
     }
+}
+
+exports.logout = function(req, res, next) {
+    req.logout();
+    req.session.destroy();
+    res.redirect('/')
 }

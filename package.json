@@ -13,6 +13,7 @@
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "express-session": "^1.17.2",
+    "flutterwave-node-v3": "^1.0.9",
     "hbs": "~4.0.4",
     "http-errors": "~1.6.3",
     "lodash": "^4.17.21",
