@@ -10,7 +10,6 @@ var usersRouter = require('./routes/users');
 var walletRouter = require('./routes/wallet');
 const passport = require('passport')
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
 
 var app = express();
 

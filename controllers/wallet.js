@@ -56,6 +56,8 @@ const add_funds = function(req, res, errors) {
   }
 
 module.exports.post_success = function(req, res, next) {
+    ////I used a@gmail.com becuase I only use webhook while using Ngrok I dont login at first
+    ///req.user.Email should be used
     addFunds.findOneAndDelete({email:"a@gmail.com"}).then(()=>{
         client.del(req.body.data.customer.email)
         const email = req.body.data.customer.email
@@ -71,7 +73,6 @@ module.exports.post_success = function(req, res, next) {
             processor_response: processor_response
         })
         addFundsData.save()
-
     client.hSet(email, [
         'amount', amount,
         'time', time,
@@ -82,6 +83,8 @@ module.exports.post_success = function(req, res, next) {
   }
 
 module.exports.success = function(req, res, next) {
+    ////I used a@gmail.com becuase I only use webhook while using Ngrok I dont login at first
+    ///req.user.Email should be used
     client.HGETALL("a@gmail.com").then(obj =>{
         if(obj){
             res.render('wallet/deposit_successful', {data:obj});

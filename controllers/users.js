@@ -1,8 +1,7 @@
 const userData = require('../models/user')
 const bcryptjs = require('bcryptjs')
 const passport = require('passport')
-const { signup, LoginErrors } = require('../utils/register')
-let flash = require('connect-flash');
+const { signup } = require('../utils/register')
 let LocalStrategy = require('passport-local').Strategy;
 
 /////////LOGIN AUTHENTICATION
@@ -37,6 +36,8 @@ passport.use(new LocalStrategy({
         });
     }
 ));
+
+/////////LOGIN AUTHENTICATION ENDS
 
 exports.get_register = function(req, res, next) {
     res.render('users/register');
@@ -91,24 +92,27 @@ exports.login = function(req, res, next) {
         if(user == null){
             theErrors["email"] = 'Incorrect email'
             rerender_login(req, res, theErrors)
-        }})
-    passport.authenticate('local',{
-        successRedirect: '/profile',
-        failureRedirect: '/login&2',
-        failureFlash: true
-    })(req, res, next);
-}
-
-exports.rerender_login = function(req, res) {
-    const errors = {};
-    errors["password"] = "Incorrect Password"
-    res.render('users/login', {errors:errors});
+        }
+        else{
+            userData.comparePassword(req.body.Password, user.Password, (err, isMatch)=>{
+                if(err) throw err
+                if(isMatch){
+                    passport.authenticate('local',{
+                        successRedirect: '/profile',
+                        failureRedirect: '/login',
+                        failureFlash: true
+                    })(req, res, next);
+                }else{
+                    const errors = {};
+                    errors["password"] = "Incorrect Password";
+                    rerender_login(req, res, errors)
+                            }})}})
 }
 
 const rerender_login = function(req, res, errors) {
-    console.log(errors)
-    res.render('users/login', {errors:errors});
-}
+    res.render('users/login', {errors:errors})
+    };
+
 
 exports.profile = function(req, res) {
     if(req.user){
@@ -123,5 +127,5 @@ exports.profile = function(req, res) {
 exports.logout = function(req, res, next) {
     req.logout();
     req.session.destroy();
-    res.redirect('/')
+    res.redirect('/LOGIN')
 }
