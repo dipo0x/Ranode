@@ -19,6 +19,7 @@ exports.chargeCard = async (req, res, next) => {
         "expiry_year": req.body.expiry_year,
         "currency": "NGN",
         "amount": req.body.amount,
+        ///this is the webhook post & get link
         "redirect_url": "https://fuzzy-bobcat-31.loca.lt/success",
         "fullname": req.user.FirstName + " " + req.user.Surname,
         "email": req.user.Email,
@@ -33,21 +34,6 @@ exports.chargeCard = async (req, res, next) => {
             const errors = {};
             errors["error"] = response.message
             add_funds(req, res, errors);
-        }
-        if (response.meta.authorization.mode === 'pin') {
-            let payload2 = payload
-            payload2.authorization = {
-                "mode": "pin",
-                "fields": [
-                    "pin"
-                ],
-                "pin": 3310
-            }
-            const reCallCharge = await flw.Charge.card(payload2)
-            const callValidate = await flw.Charge.validate({
-                "otp": "12345",
-                "flw_ref": reCallCharge.data.flw_ref
-            })
         }
         if (response.meta.authorization.mode === 'redirect') {
             var url = response.meta.authorization.redirect
@@ -119,7 +105,7 @@ module.exports.transfer = function(req, res, next) {
             "amount": req.body.amount,
             "narration": "Ranode transfer to you from" + req.user.FirstName + " " + req.user.Surname,
             "currency": "NGN",
-            "reference": "transfer-"+Date.now(), //This is a merchant's unique reference for the transfer, it can be used to query for the status of the transfer
+            "reference": "transfer-"+Date.now(),
             "callback_url": "https://localhost:3000/profile",
             "debit_currency": "NGN"
         }
