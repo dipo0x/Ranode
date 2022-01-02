@@ -31,7 +31,7 @@ passport.use(new LocalStrategy({
 		if(isMatch){
 			return done(null, user)
 		}else{
-            console.log("Incorrect password")
+            return done(null, false);
 		        }
 	        })
         });
@@ -94,12 +94,19 @@ exports.login = function(req, res, next) {
         }})
     passport.authenticate('local',{
         successRedirect: '/profile',
-        failureRedirect: '/login',
+        failureRedirect: '/login&2',
         failureFlash: true
     })(req, res, next);
 }
 
+exports.rerender_login = function(req, res) {
+    const errors = {};
+    errors["password"] = "Incorrect Password"
+    res.render('users/login', {errors:errors});
+}
+
 const rerender_login = function(req, res, errors) {
+    console.log(errors)
     res.render('users/login', {errors:errors});
 }
 

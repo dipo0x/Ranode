@@ -24,7 +24,7 @@ exports.chargeCard = async (req, res, next) => {
         "fullname": req.user.FirstName + " " + req.user.Surname,
         "email": req.user.Email,
         "phone_number": req.user.Number,
-        "enckey": "FLWSECK_TESTa501ad07503c",
+        "enckey": "<Encryption Key>",
         "tx_ref": tx_ref,
     
     }
