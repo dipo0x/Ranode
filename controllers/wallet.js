@@ -7,7 +7,7 @@ const client = redis.createClient()
 client.connect()
 /////////REDIS END
 
-const flw = new Flutterwave("FLWPUBK_TEST-19449bb3c010c4c190355bb332db3106-X", "FLWSECK_TEST-65325b32187fa4b288001b4fad732313-X");
+const flw = new Flutterwave("FLWPUBK-*************-X", "FLWSECK-********************-X");
 let tx_ref = Math.floor(Math.random() * 1000000000000);
 
 /////////////////EVEYTHING DEPOSIT/////////////////
